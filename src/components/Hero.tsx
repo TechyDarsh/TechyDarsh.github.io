@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import ShinyText from "./ShinyText";
@@ -13,236 +13,191 @@ const roles = [
 ];
 
 export default function Hero() {
-
+  // ================= TYPEWRITER =================
   const [roleText, setRoleText] = useState("");
   const [roleIdx, setRoleIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
-  // Typewriter
   useEffect(() => {
     const current = roles[roleIdx];
     let t: ReturnType<typeof setTimeout>;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     if (!deleting) {
       setRoleText(current.slice(0, charIdx));
-      t = setTimeout(() => setCharIdx((c) => c + 1), charIdx === current.length ? 2200 : 55);
-      if (charIdx === current.length) t = setTimeout(() => setDeleting(true), 2200);
+      t = setTimeout(() => setCharIdx((c) => c + 1), charIdx === current.length ? 2000 : 50);
+      if (charIdx === current.length) t = setTimeout(() => setDeleting(true), 2000);
     } else {
       setRoleText(current.slice(0, charIdx));
-      t = setTimeout(() => setCharIdx((c) => c - 1), 30);
-      if (charIdx === 0) { setDeleting(false); setRoleIdx((i) => (i + 1) % roles.length); }
+      t = setTimeout(() => setCharIdx((c) => c - 1), 25);
+      if (charIdx === 0) {
+        setDeleting(false);
+        setRoleIdx((i) => (i + 1) % roles.length);
+      }
     }
     return () => clearTimeout(t);
   }, [charIdx, deleting, roleIdx]);
 
-
-
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
-      style={{ background: "transparent" }}
-    >
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#050505]">
 
-
-      {/* Ambient glow — centered purple */}
+      {/* ================= ATMOSPHERIC LIGHT ================= */}
       <div
-        className="absolute inset-0 pointer-events-none z-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(160,54,217,0.04), transparent 70%)",
+          background: `
+            radial-gradient(ellipse at 60% 50%, rgba(120,60,200,0.08), transparent 70%),
+            radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.04), transparent 60%)
+          `,
         }}
       />
 
-      {/* ── PORTRAIT — absolute, right-anchored, full height (UNCHANGED) ── */}
-      <motion.div
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-y-0 pointer-events-none flex items-end -right-[45vw] w-[130vw] sm:-right-[30vw] sm:w-[90vw] lg:-right-[20vw] lg:w-[55vw]"
-        style={{
-          zIndex: 6,
-          top: "-5%",
-          bottom: "-2%",
-        }}
-      >
-        {/* Right-edge fade */}
-        <div
-          className="absolute inset-y-0 right-0 z-10 pointer-events-none"
-          style={{
-            width: "50%",
-            background: "linear-gradient(to right, transparent 0%, #050505 75%)",
-          }}
-        />
-        {/* Top fade */}
-        <div
-          className="absolute inset-x-0 top-0 z-10 pointer-events-none"
-          style={{
-            height: "15%",
-            background: "linear-gradient(to bottom, #050505 0%, transparent 100%)",
-          }}
-        />
-        {/* Bottom fade */}
-        <div
-          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none"
-          style={{
-            height: "20%",
-            background: "linear-gradient(to top, #050505 0%, transparent 100%)",
-          }}
-        />
+      {/* ================= FILM GRAIN ================= */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.035] mix-blend-overlay"
+        style={{ backgroundImage: "url('/noise.png')" }}
+      />
 
-        <Image
-          src="/darshcs.png"
-          alt="Darshan"
-          width={900}
-          height={1100}
-          priority
-          unoptimized
+      {/* ================= PORTRAIT ================= */}
+      <motion.div
+        initial={{ scale: 1.05 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 2, ease: "easeOut" }}
+        className="absolute right-[-18vw] top-0 h-full w-[55vw] overflow-hidden pointer-events-none"
+      >
+        {/* SOFT EDGE MASK */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.55 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          className="w-full h-full"
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "left 18%",
-            display: "block",
-            opacity: 0.3,
+            WebkitMaskImage:
+              "radial-gradient(ellipse at 65% 50%, black 45%, transparent 80%)",
+            maskImage:
+              "radial-gradient(ellipse at 65% 50%, black 45%, transparent 80%)",
           }}
-        />
+        >
+          <motion.div
+            animate={{ scale: [1, 1.02, 1] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            className="w-full h-full"
+          >
+            <Image
+              src="/darshcs.png"
+              alt="Darshan"
+              fill
+              priority
+              style={{
+                objectFit: "cover",
+                objectPosition: "left center",
+                opacity: 0.35,
+                marginTop: "30px"
+              }}
+            />
+          </motion.div>
+        </motion.div>
+
       </motion.div>
 
-      {/* ── TEXT CONTENT — full width, layered over image ── */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-14">
-        <div className="flex flex-col min-h-screen py-28 justify-center">
+      {/* ================= CONTENT ================= */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-14 w-full">
 
-          {/* ── TOP ROW: badge left, subtitle right ── */}
-          <div className="flex items-center justify-between mb-16">
-            {/* Available badge */}
-            <motion.div
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="flex items-center gap-3"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-              </span>
-              <span className="section-label">Open to Opportunities</span>
-            </motion.div>
+        {/* TOP META */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-16 flex justify-between items-center"
+        >
+          <span className="text-[11px] tracking-[0.2em] uppercase text-gray-500">
+            Open to Opportunities
+          </span>
 
-            {/* Subtitle — top right */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="hidden md:block text-[11px] font-medium tracking-[0.2em] uppercase text-right"
-              style={{ color: "#4b4b4bff" }}
-            >
-              Software Craftsman<br />AI Researcher · Security Engineer
-            </motion.p>
-          </div>
+          <span className="hidden md:block text-[11px] tracking-[0.2em] uppercase text-gray-600 text-right">
+            AI Researcher · Security Engineer
+          </span>
+        </motion.div>
 
-          {/* ── CENTER: BIG NAME with ShinyText ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-6"
-          >
-            <h1
-              className="font-bold tracking-[-0.04em] leading-[1.05]"
-              style={{ fontSize: "clamp(52px, 8vw, 110px)" }}
-            >
-              <ShinyText
-                text="Sri Darshan"
-                color="rgba(255,255,255,0.55)"
-                shineColor="#ffffff"
-                speed={3.5}
-                delay={0.8}
-                spread={130}
-                direction="left"
-              />
-              <span
-                className="font-bold tracking-[-0.04em] block"
-                style={{ color: "#181818", fontSize: "0.85em" }}
-              >
-              </span>
-            </h1>
-          </motion.div>
+        {/* NAME */}
+        <motion.h1
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="font-bold tracking-[-0.05em] leading-[1.02]"
+          style={{ fontSize: "clamp(64px, 9vw, 120px)" }}
+        >
+          <ShinyText
+            text="Sri Darshan"
+            color="rgba(255,255,255,0.7)"
+            shineColor="#ffffff"
+            speed={3}
+            delay={0.8}
+            spread={140}
+          />
+        </motion.h1>
 
-          {/* ── TYPEWRITER — below name ── */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.0 }}
-            className="flex items-center mb-10 h-8"
-          >
-            <span
-              className="text-[18px] md:text-[22px] font-light tracking-wide"
-              style={{ color: "#555" }}
-            >
-              {roleText}
-            </span>
-            <span className="cursor" />
-          </motion.div>
+        {/* TYPEWRITER */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="mt-6 text-[18px] md:text-[22px] text-gray-400 h-8"
+        >
+          {roleText}
+        </motion.div>
 
-          {/* ── BOTTOM ROW: description left, CTAs right ── */}
-          <div className="flex flex-col md:flex-row md:items-end gap-10 md:gap-20 mb-14">
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2 }}
-              className="text-[14px] leading-[1.9] md:max-w-[340px]"
-              style={{ color: "#555" }}
-            >
-              I don&apos;t just write code — I architect systems that{" "}
-              <span className="text-white font-medium">think</span>, scale across continents, and{" "}
-              <span className="text-white font-medium">defend</span> against the unseen.
-            </motion.p>
+        {/* DESCRIPTION */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          className="mt-10 max-w-[420px] text-[15px] leading-[1.9] text-gray-500"
+        >
+          I don’t just write code — I design systems that{" "}
+          <span className="text-white">think</span>, scale across continents, and{" "}
+          <span className="text-white">defend</span> against the unseen.
+        </motion.p>
 
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.35 }}
-              className="flex flex-wrap items-center gap-4"
-            >
-              <a href="#projects" className="btn-primary">
-                Explore My Work
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
-              <a href="#contact" className="btn-ghost">Let&apos;s Connect</a>
-            </motion.div>
-          </div>
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.4 }}
+          className="mt-12 flex gap-6"
+        >
+          <a href="#projects" className="px-7 py-3 rounded-full bg-white text-black text-sm font-medium tracking-wide hover:scale-[1.03] transition cursor-pointer select-none">
+            Explore Work
+          </a>
 
-          {/* ── FOOTER META ── */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.6 }}
-            className="flex items-center gap-5 text-[11px]"
-            style={{ color: "#333" }}
-          >
-            <span>PSG College of Arts &amp; Science</span>
-            <span style={{ color: "#1a1a1a" }}>·</span>
-            <span>M.Sc Software Systems</span>
-            <span style={{ color: "#1a1a1a" }}>·</span>
-            <span>Coimbatore, India</span>
-          </motion.div>
-        </div>
+          <a href="#contact" className="px-7 py-3 rounded-full border border-white/20 text-sm tracking-wide hover:bg-white/10 transition cursor-pointer select-none">
+            Let’s Connect
+          </a>
+        </motion.div>
+
+        {/* FOOTER META */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.8 }}
+          className="mt-16 text-[11px] text-gray-600 flex gap-3"
+        >
+          <span>PSG College</span>
+          <span>·</span>
+          <span>M.Sc Software Systems</span>
+          <span>·</span>
+          <span>India</span>
+        </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* SCROLL */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.2em] text-gray-600"
       >
-        <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "#252525" }}>Scroll</span>
-        <div className="w-[1px] h-10" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.06), transparent)" }} />
+        SCROLL
       </motion.div>
     </section>
   );
