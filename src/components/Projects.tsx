@@ -16,7 +16,7 @@ const projects = [
     stack: ["React Native", "Expo", "JavaScript", "Firebase"],
     category: "Mobile",
     year: "2024",
-    href: "https://github.com/TechyDarsh",
+    href: "https://github.com/TechyDarsh/PSGCAS-StudentApp-PoweredByReact",
     image: "/psgcas.jpeg",
   },
   {
@@ -26,7 +26,7 @@ const projects = [
     stack: ["JavaScript", "Node.js", "REST API", "MongoDB"],
     category: "Web Platform",
     year: "2024",
-    href: "https://github.com/TechyDarsh",
+    href: "https://contractfarming.netlify.app/",
     image: "/farm.png",
   },
   {
@@ -36,7 +36,7 @@ const projects = [
     stack: ["Blockchain", "Solidity", "DApps"],
     category: "Distributed",
     year: "2023",
-    href: "https://github.com/TechyDarsh",
+    href: "https://blockchain.com",
     image: "/farm.jpeg",
   },
   {
@@ -46,7 +46,7 @@ const projects = [
     stack: ["Python", "TensorFlow", "Pandas", "NumPy"],
     category: "Machine Learning",
     year: "2023",
-    href: "https://github.com/TechyDarsh",
+    href: "https://github.com/Techydarsh/StockPrediction_Simple",
     image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
   },
   {
@@ -56,13 +56,13 @@ const projects = [
     stack: ["Python", "Rust", "LLM Agents", "WASM"],
     category: "Systems",
     year: "2024",
-    href: "https://github.com/TechyDarsh",
+    href: "https://github.com/TechyDarsh/QuantumOS",
     image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop",
   },
 ];
 
 export default function Projects() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(headerRef, { once: true, margin: "-60px" });
 
@@ -184,7 +184,7 @@ export default function Projects() {
       ref={sectionRef}
       id="projects"
       className="pt-28 md:pt-40 pb-0"
-      style={{ background: "#050505" }}
+      style={{ background: "transparent" }}
     >
       <div className="rule" />
 
@@ -336,8 +336,8 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* ── Quote ── */}
-      <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-14 pt-24 pb-8">
+      {/* ── Custom bottom section (Quote + Signature) ── */}
+      <div className="max-w-4xl mx-auto px-6 mt-32 md:mt-48 mb-20 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -350,14 +350,13 @@ export default function Projects() {
           >
             <span style={{ color: "rgba(255,255,255,0.12)" }}>&ldquo;</span>
             <ShinyText
-              text="Jack of All Trades,"
+              text="Jack of All Trades, "
               color="rgba(255,255,255,0.6)"
               shineColor="#ffffff"
               speed={4}
               delay={1}
               spread={110}
             />
-            <br />
             <ShinyText
               text="but master of none —"
               color="rgba(255,255,255,0.22)"

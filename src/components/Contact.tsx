@@ -26,7 +26,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-28 md:py-40" style={{ background: "#050505" }}>
+    <section id="contact" className="py-28 md:py-40" style={{ background: "transparent" }}>
       <div className="rule" />
 
       <div ref={ref} className="max-w-7xl mx-auto px-6 md:px-10 lg:px-14 pt-20">

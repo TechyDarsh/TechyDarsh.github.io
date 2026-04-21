@@ -11,6 +11,8 @@ import Footer from "@/components/Footer";
 import SplashScreen from "@/components/SplashScreen";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import ChatBot from "@/components/ChatBot";
+import Particles from "@/components/Particles";
 
 export default function Home() {
   const [showSplash, setShowSplash] = useState(true);
@@ -20,6 +22,18 @@ export default function Home() {
       <AnimatePresence>
         {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
       </AnimatePresence>
+      <div className="fixed inset-0 z-[-1] pointer-events-none">
+        <Particles
+          particleColors={["#ffffff", "#ffffff"]}
+          particleCount={200}
+          particleSpread={10}
+          speed={0.1}
+          particleBaseSize={100}
+          moveParticlesOnHover={true}
+          alphaParticles={false}
+          disableRotation={false}
+        />
+      </div>
       <Navbar />
       <main>
         <Hero />
@@ -30,6 +44,7 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+      <ChatBot />
     </>
   );
 }

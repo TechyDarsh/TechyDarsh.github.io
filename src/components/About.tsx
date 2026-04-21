@@ -38,7 +38,7 @@ export default function About() {
   const yRight = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [-20, 20]);
 
   return (
-    <section id="about" ref={containerRef} className="py-28 md:py-40 relative overflow-hidden" style={{ background: "#050505" }}>
+    <section id="about" ref={containerRef} className="py-28 md:py-40 relative overflow-hidden" style={{ background: "transparent" }}>
       <div className="rule" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-14 pt-20 relative z-10">
@@ -80,7 +80,7 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="px-8 py-8 text-center" style={{ background: "#050505" }}
+              className="px-8 py-8 text-center" style={{ background: "transparent" }}
             >
               <span className="block text-[36px] font-bold text-white tracking-tight">{s.value}</span>
               <span className="block text-[13px] font-medium text-white mt-1">{s.label}</span>

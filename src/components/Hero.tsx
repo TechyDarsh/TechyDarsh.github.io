@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import ShinyText from "./ShinyText";
-import Plasma from "./Plasma";
 
 const roles = [
   "Engineers intelligent systems",
@@ -14,7 +13,7 @@ const roles = [
 ];
 
 export default function Hero() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const [roleText, setRoleText] = useState("");
   const [roleIdx, setRoleIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
@@ -37,66 +36,15 @@ export default function Hero() {
     return () => clearTimeout(t);
   }, [charIdx, deleting, roleIdx]);
 
-  // Particle canvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d")!;
-    let animId: number;
-    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-    resize();
-    window.addEventListener("resize", resize);
 
-    const particles = Array.from({ length: 55 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1 + 0.3,
-      sx: (Math.random() - 0.5) * 0.12,
-      sy: (Math.random() - 0.5) * 0.12,
-      o: Math.random() * 0.07 + 0.02,
-    }));
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (const p of particles) {
-        p.x += p.sx; p.y += p.sy;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${p.o})`;
-        ctx.fill();
-      }
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", resize); };
-  }, []);
 
   return (
     <section
       id="hero"
       className="relative min-h-screen flex flex-col justify-center overflow-hidden"
-      style={{ background: "#050505" }}
+      style={{ background: "transparent" }}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
 
-      {/* ── Plasma wave background ── */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{ opacity: 0.65, position: "absolute", inset: 0 }}
-      >
-        <Plasma
-          color="#A036D9"
-          speed={0.5}
-          direction="forward"
-          scale={1.2}
-          opacity={1}
-          mouseInteractive={true}
-        />
-      </div>
 
       {/* Ambient glow — centered purple */}
       <div
@@ -111,11 +59,9 @@ export default function Hero() {
         initial={{ opacity: 0, x: 40 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-y-0 pointer-events-none hidden lg:flex items-end"
+        className="absolute inset-y-0 pointer-events-none flex items-end -right-[45vw] w-[130vw] sm:-right-[30vw] sm:w-[90vw] lg:-right-[20vw] lg:w-[55vw]"
         style={{
           zIndex: 6,
-          right: "-20vw",
-          width: "55vw",
           top: "-5%",
           bottom: "-2%",
         }}

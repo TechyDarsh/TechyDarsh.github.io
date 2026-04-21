@@ -64,7 +64,7 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer style={{ background: "#050505" }}>
+    <footer style={{ background: "transparent" }}>
       <div className="rule" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-14 pt-20 pb-10">
