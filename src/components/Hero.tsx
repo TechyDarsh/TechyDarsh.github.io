@@ -24,6 +24,7 @@ export default function Hero() {
   useEffect(() => {
     const current = roles[roleIdx];
     let t: ReturnType<typeof setTimeout>;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!deleting) {
       setRoleText(current.slice(0, charIdx));
       t = setTimeout(() => setCharIdx((c) => c + 1), charIdx === current.length ? 2200 : 55);

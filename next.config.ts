@@ -4,8 +4,6 @@ const nextConfig: NextConfig = {
   output: "export",
   // Change this to match your GitHub repo name (e.g., '/portfolio-app')
   // If deploying to username.github.io (root), set basePath to ''
-  basePath: "/portfolio-app",
-  assetPrefix: "/portfolio-app/",
   images: {
     unoptimized: true,
   },

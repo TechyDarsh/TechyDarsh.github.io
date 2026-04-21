@@ -32,22 +32,21 @@ function useMagnetic(strength = 0.35) {
 /* ─── Animated nav link ─── */
 function NavLink({ label, href }: { label: string; href: string }) {
   const [hovered, setHovered] = useState(false);
-  const mag = useMagnetic(0.25);
+  const { ref: magRef, sx: magSx, sy: magSy, onMove: magOnMove, onLeave: magOnLeave } = useMagnetic(0.25);
 
   return (
     <motion.a
-      ref={mag.ref as React.Ref<HTMLAnchorElement>}
+      ref={magRef as React.Ref<HTMLAnchorElement>}
       href={href}
-      style={{ x: mag.sx, y: mag.sy }}
-      onMouseMove={mag.onMove as any}
-      onMouseLeave={() => { mag.onLeave(); setHovered(false); }}
+      onMouseMove={magOnMove as React.MouseEventHandler<HTMLAnchorElement>}
+      onMouseLeave={() => { magOnLeave(); setHovered(false); }}
       onMouseEnter={() => setHovered(true)}
       className="relative px-1 py-0.5 text-[13px] font-medium tracking-[-0.01em] select-none"
       style={{
         color: hovered ? "#fff" : "rgba(255,255,255,0.38)",
         transition: "color 0.3s ease",
-        x: mag.sx,
-        y: mag.sy,
+        x: magSx,
+        y: magSy,
       }}
     >
       {label}
@@ -101,7 +100,7 @@ function GlowOrb() {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const hireMag = useMagnetic(0.4);
+  const { ref: hireRef, sx: hireSx, sy: hireSy, onMove: hireOnMove, onLeave: hireOnLeave } = useMagnetic(0.4);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -129,13 +128,14 @@ export default function Navbar() {
       >
         {/* Frosted glass bar */}
         <motion.div
-          animate={{
+        animate={{
             background: scrolled
               ? "rgba(8,8,8,0.82)"
               : "rgba(8,8,8,0)",
             backdropFilter: scrolled ? "blur(32px) saturate(180%)" : "blur(0px)",
             WebkitBackdropFilter: scrolled ? "blur(32px) saturate(180%)" : "blur(0px)",
-          }}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any}
           transition={{ duration: 0.5, ease: "easeInOut" }}
           style={{
             borderBottom: scrolled
@@ -198,11 +198,11 @@ export default function Navbar() {
 
             {/* ── CTA ── */}
             <motion.a
-              ref={hireMag.ref as React.Ref<HTMLAnchorElement>}
+              ref={hireRef as React.Ref<HTMLAnchorElement>}
               href="mailto:sridarshancs@gmail.com"
               style={{
-                x: hireMag.sx,
-                y: hireMag.sy,
+                x: hireSx,
+                y: hireSy,
                 display: "none",
                 alignItems: "center",
                 gap: "6px",
@@ -221,8 +221,9 @@ export default function Navbar() {
                 overflow: "hidden",
               }}
               className="md-flex hire-btn"
-              onMouseMove={hireMag.onMove as any}
-              onMouseLeave={hireMag.onLeave}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              onMouseMove={hireOnMove as any}
+              onMouseLeave={hireOnLeave}
               whileHover="hov"
               whileTap={{ scale: 0.97 }}
             >
