@@ -182,6 +182,13 @@ export default function ChatBot() {
     }
   }, [hasOpened]);
 
+  // Listen for custom event to open from dock
+  useEffect(() => {
+    const handleCustomOpen = () => handleOpen();
+    window.addEventListener("open-chatbot", handleCustomOpen);
+    return () => window.removeEventListener("open-chatbot", handleCustomOpen);
+  }, [handleOpen]);
+
   const handleSend = useCallback(() => {
     const trimmed = input.trim();
     if (!trimmed) return;
@@ -220,7 +227,7 @@ export default function ChatBot() {
             exit={{ scale: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
             onClick={handleOpen}
-            className="fixed bottom-6 right-6 z-[9998] w-14 h-14 rounded-full flex items-center justify-center cursor-pointer"
+            className="hidden md:flex fixed md:bottom-6 md:right-6 z-[9998] w-14 h-14 rounded-full items-center justify-center cursor-pointer"
             style={{
               background: "linear-gradient(135deg, #7B2FBE 0%, #A036D9 100%)",
               boxShadow: "0 8px 32px rgba(160, 54, 217, 0.4), 0 0 0 1px rgba(255,255,255,0.06)",
@@ -252,7 +259,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-6 right-6 z-[9998] flex flex-col"
+            className="fixed bottom-20 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:bottom-6 md:right-6 z-[9998] flex flex-col"
             style={{
               width: "min(400px, calc(100vw - 48px))",
               height: "min(560px, calc(100vh - 120px))",

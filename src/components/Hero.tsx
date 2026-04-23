@@ -63,32 +63,23 @@ export default function Hero() {
         initial={{ scale: 1.05 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}
-        className="absolute right-0 md:right-[-18vw] top-0 h-full w-[100vw] md:w-[55vw] overflow-hidden pointer-events-none"
+        className="absolute right-0 md:right-[-18vw] top-10 md:top-0 h-full w-[100vw] md:w-[55vw] overflow-hidden pointer-events-none"
       >
         {/* SOFT EDGE MASK */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.55 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-          className="w-full h-full"
-          style={{
-            WebkitMaskImage:
-              "radial-gradient(ellipse at 65% 50%, black 45%, transparent 80%)",
-            maskImage:
-              "radial-gradient(ellipse at 65% 50%, black 45%, transparent 80%)",
-          }}
+          className="absolute inset-0 pointer-events-none hero-mask"
         >
           <motion.div
             animate={{ scale: [1, 1.02, 1] }}
             transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-            className="w-full h-full"
+            className="w-full h-full scale-90 md:scale-100"
           >
             <Image
-              src="/darshcs.png"
+              src="/darsh1.png"
               alt="Darshan"
               fill
               priority
-              className="object-cover hero-img opacity-60 md:opacity-[0.35]"
+              className="object-cover hero-img opacity-75 md:opacity-[0.35]"
               style={{
                 marginTop: "30px"
               }}
@@ -99,7 +90,7 @@ export default function Hero() {
       </motion.div>
 
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-14 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-14 w-full -mt-56 md:mt-0">
 
         {/* TOP META */}
         <motion.div
@@ -195,9 +186,20 @@ export default function Hero() {
         .hero-img {
           object-position: left center;
         }
-        @media (max-width: 767px) {
+        .hero-mask {
+          -webkit-mask-image: radial-gradient(ellipse at 65% 50%, black 45%, transparent 80%);
+          mask-image: radial-gradient(ellipse at 65% 50%, black 45%, transparent 80%);
+        }
+        @media (max-width: 760px) {
           .hero-img {
-            object-position: 10% center !important;
+            object-position: center !important;
+            transform: scale(0.85) translateY(-2%) translateX();
+          }
+          .hero-mask {
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 85%), radial-gradient(circle at 50% 40%, black 40%, transparent 80%);
+            mask-image: linear-gradient(to bottom, black 60%, transparent 85%), radial-gradient(circle at 50% 40%, black 40%, transparent 80%);
+            -webkit-mask-composite: source-in;
+            mask-composite: intersect;
           }
         }
       `}</style>

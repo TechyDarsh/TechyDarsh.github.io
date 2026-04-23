@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, MouseEvent } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import Dock from "./Dock";
-import { VscPerson, VscBriefcase, VscTools, VscMail } from "react-icons/vsc";
+import { VscPerson, VscBriefcase, VscTools, VscMail, VscRobot } from "react-icons/vsc";
 
 const links = [
   { label: "About", href: "#about" },
@@ -17,6 +17,7 @@ const dockItems = [
   { icon: <VscBriefcase size={18} />, label: "Work", onClick: () => window.location.href = "#projects" },
   { icon: <VscTools size={18} />, label: "Expertise", onClick: () => window.location.href = "#skills" },
   { icon: <VscMail size={18} />, label: "Contact", onClick: () => window.location.href = "#contact" },
+  { icon: <VscRobot size={18} />, label: "AI Chat", onClick: () => window.dispatchEvent(new Event("open-chatbot")) },
 ];
 
 /* ─── Magnetic button hook ─── */
@@ -276,7 +277,7 @@ export default function Navbar() {
       {/* ── Mobile Dock ── */}
       <div className="dock-container" style={{ position: "fixed", bottom: 0, left: 0, width: "100%", zIndex: 101, pointerEvents: "none" }}>
         <div style={{ pointerEvents: "auto" }}>
-          <Dock items={dockItems} panelHeight={60} baseItemSize={42} magnification={56} />
+          <Dock items={dockItems} panelHeight={48} baseItemSize={30} magnification={42} distance={60} />
         </div>
       </div>
 
