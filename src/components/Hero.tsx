@@ -63,7 +63,7 @@ export default function Hero() {
         initial={{ scale: 1.05 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}
-        className="absolute right-[-18vw] top-0 h-full w-[55vw] overflow-hidden pointer-events-none"
+        className="absolute right-0 md:right-[-18vw] top-0 h-full w-[100vw] md:w-[55vw] overflow-hidden pointer-events-none"
       >
         {/* SOFT EDGE MASK */}
         <motion.div
@@ -88,10 +88,8 @@ export default function Hero() {
               alt="Darshan"
               fill
               priority
+              className="object-cover object-center md:object-left opacity-60 md:opacity-[0.35]"
               style={{
-                objectFit: "cover",
-                objectPosition: "left center",
-                opacity: 0.35,
                 marginTop: "30px"
               }}
             />
