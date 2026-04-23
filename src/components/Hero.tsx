@@ -88,7 +88,7 @@ export default function Hero() {
               alt="Darshan"
               fill
               priority
-              className="object-cover object-center md:object-left opacity-60 md:opacity-[0.35]"
+              className="object-cover hero-img opacity-60 md:opacity-[0.35]"
               style={{
                 marginTop: "30px"
               }}
@@ -190,6 +190,17 @@ export default function Hero() {
       >
         SCROLL
       </motion.div>
+
+      <style>{`
+        .hero-img {
+          object-position: left center;
+        }
+        @media (max-width: 767px) {
+          .hero-img {
+            object-position: 10% center !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

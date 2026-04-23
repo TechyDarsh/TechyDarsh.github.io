@@ -2,12 +2,21 @@
 
 import { useState, useEffect, useRef, MouseEvent } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import Dock from "./Dock";
+import { VscPerson, VscBriefcase, VscTools, VscMail } from "react-icons/vsc";
 
 const links = [
   { label: "About", href: "#about" },
   { label: "Work", href: "#projects" },
   { label: "Expertise", href: "#skills" },
   { label: "Contact", href: "#contact" },
+];
+
+const dockItems = [
+  { icon: <VscPerson size={18} />, label: "About", onClick: () => window.location.href = "#about" },
+  { icon: <VscBriefcase size={18} />, label: "Work", onClick: () => window.location.href = "#projects" },
+  { icon: <VscTools size={18} />, label: "Expertise", onClick: () => window.location.href = "#skills" },
+  { icon: <VscMail size={18} />, label: "Contact", onClick: () => window.location.href = "#contact" },
 ];
 
 /* ─── Magnetic button hook ─── */
@@ -99,7 +108,6 @@ function GlowOrb() {
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const { ref: hireRef, sx: hireSx, sy: hireSy, onMove: hireOnMove, onLeave: hireOnLeave } = useMagnetic(0.4);
 
   useEffect(() => {
@@ -261,143 +269,25 @@ export default function Navbar() {
               </motion.svg>
             </motion.a>
 
-            {/* ── Hamburger ── */}
-            <motion.button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Menu"
-              whileTap={{ scale: 0.92 }}
-              style={{
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                padding: "8px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "5px",
-                alignItems: "center",
-              }}
-              className="mobile-menu-btn"
-            >
-              {[0, 1, 2].map((i) => (
-                <motion.span
-                  key={i}
-                  animate={
-                    mobileOpen
-                      ? i === 0
-                        ? { rotate: 45, y: 6.5, width: 20 }
-                        : i === 1
-                          ? { opacity: 0, scaleX: 0 }
-                          : { rotate: -45, y: -6.5, width: 20 }
-                      : { rotate: 0, y: 0, opacity: 1, scaleX: 1, width: i === 1 ? 14 : 20 }
-                  }
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  style={{
-                    display: "block",
-                    height: "1px",
-                    borderRadius: "1px",
-                    background: "rgba(255,255,255,0.5)",
-                    transformOrigin: "center",
-                  }}
-                />
-              ))}
-            </motion.button>
           </div>
         </motion.div>
-
-        {/* ── Mobile Drawer ── */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, y: -8 }}
-              animate={{ opacity: 1, height: "auto", y: 0 }}
-              exit={{ opacity: 0, height: 0, y: -8 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              style={{
-                overflow: "hidden",
-                background: "rgba(6,6,6,0.97)",
-                backdropFilter: "blur(40px)",
-                borderBottom: "0.5px solid rgba(255,255,255,0.05)",
-              }}
-            >
-              <div style={{ padding: "1.5rem 2rem 2rem" }}>
-                {links.map((l, i) => (
-                  <motion.a
-                    key={l.label}
-                    href={l.href}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.06 + 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    onClick={() => setMobileOpen(false)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "14px 0",
-                      borderBottom: i < links.length - 1 ? "0.5px solid rgba(255,255,255,0.05)" : "none",
-                      fontSize: "15px",
-                      fontWeight: 400,
-                      color: "rgba(255,255,255,0.45)",
-                      textDecoration: "none",
-                      letterSpacing: "-0.01em",
-                      fontFamily: "inherit",
-                      transition: "color 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.9)")}
-                    onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.45)")}
-                  >
-                    <span>{l.label}</span>
-                    <motion.svg
-                      initial={{ x: -4, opacity: 0 }}
-                      whileHover={{ x: 0, opacity: 1 }}
-                      width="12" height="12" viewBox="0 0 12 12" fill="none"
-                    >
-                      <path d="M1 11L11 1M11 1H4M11 1V8" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                    </motion.svg>
-                  </motion.a>
-                ))}
-
-                <motion.a
-                  href="mailto:sridarshancs@gmail.com"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35, duration: 0.4 }}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    marginTop: "1.5rem",
-                    padding: "10px 20px",
-                    borderRadius: "100px",
-                    border: "0.5px solid rgba(255,255,255,0.1)",
-                    background: "rgba(255,255,255,0.04)",
-                    color: "rgba(255,255,255,0.6)",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    textDecoration: "none",
-                    fontFamily: "inherit",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  Hire me
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </motion.a>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.nav>
+
+      {/* ── Mobile Dock ── */}
+      <div className="dock-container" style={{ position: "fixed", bottom: 0, left: 0, width: "100%", zIndex: 101, pointerEvents: "none" }}>
+        <div style={{ pointerEvents: "auto" }}>
+          <Dock items={dockItems} panelHeight={60} baseItemSize={42} magnification={56} />
+        </div>
+      </div>
 
       {/* ── Scoped styles ── */}
       <style>{`
         @media (min-width: 768px) {
           .md-flex { display: flex !important; }
-          .mobile-menu-btn { display: none !important; }
+          .dock-container { display: none !important; }
         }
         @media (max-width: 767px) {
           .md-flex { display: none !important; }
-          .mobile-menu-btn { display: flex !important; }
         }
         .hire-btn:hover {
           color: rgba(255,255,255,0.95) !important;
