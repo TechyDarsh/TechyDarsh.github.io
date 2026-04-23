@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import NorrisText from "./NorrisText";
 
 /* Tech items with simple icon representations */
 const row1 = [
@@ -62,9 +63,9 @@ export default function Skills() {
             initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.1 }}
             className="font-bold tracking-[-0.03em] text-white"
-            style={{ fontSize: "clamp(28px, 3.2vw, 46px)" }}
+            style={{ fontSize: "clamp(32px, 3.8vw, 54px)" }}
           >
-            Tools of the trade.
+            <NorrisText text="Tools of the trade." />
           </motion.h2>
           <motion.span
             initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}

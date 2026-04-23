@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useEffect } from "react";
 import BorderGlow from "./BorderGlow";
 import ShinyText from "./ShinyText";
+import NorrisText from "./NorrisText";
 
 const GAP = 40;          // px gap between cards
 const AUTO_SPEED = 0.45; // px per animation frame
@@ -207,9 +208,9 @@ export default function Projects() {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="font-bold tracking-[-0.03em] text-white"
-              style={{ fontSize: "clamp(28px, 3.2vw, 46px)" }}
+              style={{ fontSize: "clamp(32px, 3.8vw, 54px)" }}
             >
-              Every project solves a real problem.
+              <NorrisText text="Every project solves a real problem." />
             </motion.h2>
           </div>
           <motion.a

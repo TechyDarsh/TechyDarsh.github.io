@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import StarBorder from "./StarBorder";
 import GlareHover from "./GlareHover";
+import NorrisText from "./NorrisText";
 
 const stats = [
   { value: "9+", label: "Languages", desc: "From C to Swift" },
@@ -55,9 +56,7 @@ export default function About() {
             <h2 className="font-bold leading-[1.12] tracking-[-0.03em] text-white"
               style={{ fontSize: "clamp(28px, 3.5vw, 48px)" }}
             >
-              I build at the intersection where{" "}
-              <span className="text-white">intelligence</span>{" "}meets{" "}
-              <span className="text-white">resilience</span>.
+              <NorrisText text="I build at the intersection where intelligence meets resilience." />
             </h2>
           </motion.div>
 

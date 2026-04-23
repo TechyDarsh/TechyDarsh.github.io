@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import ShinyText from "./ShinyText";
+import NorrisText from "./NorrisText";
 
 const roles = [
   "Engineers intelligent systems",
@@ -127,14 +127,7 @@ export default function Hero() {
           className="font-bold tracking-[-0.05em] leading-[1.02]"
           style={{ fontSize: "clamp(64px, 9vw, 120px)" }}
         >
-          <ShinyText
-            text="Sri Darshan"
-            color="rgba(255,255,255,0.7)"
-            shineColor="#ffffff"
-            speed={3}
-            delay={0.8}
-            spread={140}
-          />
+          <NorrisText text="Sri Darshan" />
         </motion.h1>
 
         {/* TYPEWRITER */}

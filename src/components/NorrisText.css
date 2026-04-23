@@ -1,0 +1,59 @@
+.norris-container {
+  /* You can override these variables where you use the component */
+  --c-primary: #ffffff; 
+  --c-secondary: #7851A9; /* Royal Purple */
+  --animation-time: 12ms;
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--c-primary);
+}
+
+.norris-container .norris-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.norris-container .norris-char {
+  position: relative;
+  color: transparent;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.norris-container .norris-char::before,
+.norris-container .norris-char::after {
+  position: absolute;
+  left: 0;
+  content: attr(data-char);
+  color: var(--c-primary);
+  transition: all ease-in-out calc(var(--animation-time) * 10);
+  transition-delay: calc(var(--index) * var(--animation-time));
+}
+
+.norris-container .norris-char::before {
+  transform: translateY(0);
+}
+
+.norris-container .norris-char::after {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.norris-container:hover {
+  color: var(--c-secondary);
+}
+
+.norris-container:hover .norris-char::before,
+.norris-container:hover .norris-char::after {
+  color: var(--c-secondary);
+}
+
+.norris-container:hover .norris-char::before {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.norris-container:hover .norris-char::after {
+  transform: translateY(0);
+  opacity: 1;
+}

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
+import NorrisText from "./NorrisText";
 
 interface Line {
   type: "input" | "output" | "system" | "error";
@@ -123,9 +124,9 @@ export default function TerminalSpotify() {
         <motion.h2 initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.1 }}
           className="font-bold tracking-[-0.03em] text-white mb-14"
-          style={{ fontSize: "clamp(28px, 3.2vw, 46px)" }}
+          style={{ fontSize: "clamp(32px, 3.8vw, 54px)" }}
         >
-          Explore & vibe.
+          <NorrisText text="Explore & vibe." />
         </motion.h2>
 
         <div className="grid lg:grid-cols-2 gap-6">
