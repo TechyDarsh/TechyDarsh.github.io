@@ -79,7 +79,7 @@ export default function Hero() {
               alt="Darshan"
               fill
               priority
-              className="object-cover hero-img opacity-75 md:opacity-[0.35]"
+              className="object-cover hero-img opacity-[0.35]"
               style={{
                 marginTop: "30px"
               }}
@@ -193,7 +193,7 @@ export default function Hero() {
         @media (max-width: 760px) {
           .hero-img {
             object-position: center !important;
-            transform: scale(0.85) translateY(-2%) translateX();
+            transform: scale(0.85) translateY(-2%) translateX(0);
           }
           .hero-mask {
             -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 85%), radial-gradient(circle at 50% 40%, black 40%, transparent 80%);
