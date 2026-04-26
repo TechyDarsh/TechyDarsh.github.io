@@ -15,7 +15,7 @@ interface StarBorderProps {
 }
 
 const StarBorder: React.FC<StarBorderProps> = ({
-  as: Component = "div",
+  as = "div",
   className = "",
   color = "white",
   speed = "6s",
@@ -23,6 +23,7 @@ const StarBorder: React.FC<StarBorderProps> = ({
   children,
   ...rest
 }) => {
+  const Component = as as any;
   return (
     <Component
       className={`star-border-container ${className}`}
