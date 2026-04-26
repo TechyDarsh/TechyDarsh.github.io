@@ -4,7 +4,7 @@ import React from "react";
 import "./StarBorder.css";
 
 interface StarBorderProps {
-  as?: React.ElementType;
+  as?: React.ElementType<any>;
   className?: string;
   color?: string;
   speed?: string;

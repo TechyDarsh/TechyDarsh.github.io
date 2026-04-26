@@ -5,6 +5,8 @@ import { useRef, useEffect } from "react";
 import BorderGlow from "./BorderGlow";
 import ShinyText from "./ShinyText";
 import NorrisText from "./NorrisText";
+import Lanyard from "./Lanyard";
+
 
 const GAP = 40;          // px gap between cards
 const AUTO_SPEED = 0.45; // px per animation frame
@@ -337,79 +339,89 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* ── Custom bottom section (Quote + Signature) ── */}
-      <div className="max-w-4xl mx-auto px-6 mt-32 md:mt-48 mb-20 pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <p
-            className="font-bold tracking-[-0.04em] leading-[1.15]"
-            style={{ fontSize: "clamp(32px, 5.5vw, 80px)" }}
-          >
-            <span style={{ color: "rgba(255,255,255,0.12)" }}>&ldquo;</span>
-            <ShinyText
-              text="Jack of All Trades, "
-              color="rgba(255,255,255,0.6)"
-              shineColor="#ffffff"
-              speed={4}
-              delay={1}
-              spread={110}
-            />
-            <ShinyText
-              text="but master of none —"
-              color="rgba(255,255,255,0.22)"
-              shineColor="rgba(255,255,255,0.5)"
-              speed={5}
-              delay={0.5}
-              spread={110}
-              direction="right"
-            />
-            <br />
-            <ShinyText
-              text="often better than a master of one."
-              color="#7B2FBE"
-              shineColor="#5AC8FA"
-              speed={3.5}
-              delay={0.8}
-              spread={100}
-            />
-            <span style={{ color: "rgba(255,255,255,0.12)" }}>&rdquo;</span>
-          </p>
-          <div className="flex items-center gap-4 mt-8">
-            <div style={{ width: 32, height: 1, background: "rgba(255,255,255,0.12)" }} />
-            <span className="text-[12px] font-mono tracking-[0.18em] uppercase" style={{ color: "#444" }}>
-              A philosophy, not an excuse
-            </span>
-          </div>
-
-          {/* Signature — after the attribution */}
+      {/* ── Custom bottom section (Quote + Signature + Lanyard) ── */}
+      <div className="max-w-7xl mx-auto px-6 mt-32 md:mt-48 mb-20 relative">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+          {/* Left side: Text and Signature */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 w-full flex justify-center"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="flex-1 md:pr-8 pointer-events-none flex flex-col items-center md:items-start text-center md:text-left"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/sign.png"
-              alt="Signature"
-              style={{
-                width: "40%",
-                height: "40%",
-                paddingLeft: "",
-                opacity: 1,
-                filter: "none",
-                userSelect: "none",
-                pointerEvents: "none",
-              }}
-              draggable={false}
-            />
+            <p
+              className="font-bold tracking-[-0.04em] leading-[1.15]"
+              style={{ fontSize: "clamp(20px, 3vw, 44px)" }}
+            >
+              <span style={{ color: "rgba(255,255,255,0.12)" }}>&ldquo;</span>
+              <span className="max-md:whitespace-normal whitespace-nowrap">
+                <ShinyText
+                  text="Jack of All Trades,master of none but"
+                  color="rgba(255,255,255,0.6)"
+                  shineColor="#ffffff"
+                  speed={4}
+                  delay={0}
+                  spread={110}
+                />
+              </span>
+              <br className="hidden md:block" />
+              <span className="max-md:whitespace-normal whitespace-nowrap">
+                <ShinyText
+                  text="often better than a master of one."
+                  color="#7B2FBE"
+                  shineColor="#5AC8FA"
+                  speed={3.5}
+                  delay={0.8}
+                  spread={100}
+                />
+                <span style={{ color: "rgba(255,255,255,0.12)" }}>&rdquo;</span>
+              </span>
+            </p>
+            <div className="flex items-center justify-center md:justify-start gap-4 mt-8">
+              <div style={{ width: 32, height: 1, background: "rgba(255,255,255,0.12)" }} />
+              <span className="text-[12px] font-mono tracking-[0.18em] uppercase" style={{ color: "#444" }}>
+                A philosophy, not an excuse
+              </span>
+            </div>
+
+            {/* Signature — after the attribution */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 md:mt-10 w-full flex justify-center md:justify-start"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/sign.png"
+                alt="Signature"
+                style={{
+                  width: "50%",
+                  minWidth: "220px",
+                  height: "auto",
+                  opacity: 1,
+                  filter: "none",
+                  userSelect: "none",
+                  pointerEvents: "none",
+                }}
+                draggable={false}
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
+
+          {/* Right side: Lanyard Component */}
+          <motion.div
+            className="flex-1 w-full h-[450px] md:h-[700px] relative z-10 max-md:-mt-10 md:-translate-x-16 lg:-translate-x-24"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
+            <Lanyard position={[0, -1, 16]} gravity={[0, -40, 0]} />
+          </motion.div>
+        </div>
       </div>
     </section>
   );
