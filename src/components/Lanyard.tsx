@@ -115,7 +115,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
 
   const { nodes, materials } = useGLTF('/card.glb') as any;
   const texture = useTexture('/lanyard.png');
-  const cardTexture = useTexture('/founder.png');
+  const cardTexture = useTexture('/Founder.png');
   cardTexture.colorSpace = THREE.SRGBColorSpace;
   cardTexture.flipY = false;
   cardTexture.wrapS = THREE.RepeatWrapping;
