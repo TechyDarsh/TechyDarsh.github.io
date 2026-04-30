@@ -2,7 +2,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
+import { useGLTF, useTexture, Environment, Lightformer, Html } from '@react-three/drei';
 import {
   BallCollider,
   CuboidCollider,
@@ -115,12 +115,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
 
   const { nodes, materials } = useGLTF('/card.glb') as any;
   const texture = useTexture('/lanyard.png');
-  const cardTexture = useTexture('/Founder.png');
-  cardTexture.colorSpace = THREE.SRGBColorSpace;
-  cardTexture.flipY = false;
-  cardTexture.wrapS = THREE.RepeatWrapping;
-  cardTexture.wrapT = THREE.RepeatWrapping;
-  cardTexture.repeat.set(2, 1);
+  // Removed cardTexture logic
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
@@ -201,8 +196,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
         >
           <CuboidCollider args={[0.92, 1.3, 0.01]} />
           <group
-            scale={2.6}
-            position={[0, -1.38, -0.05]}
+            scale={2.35}
+            position={[0, -1.25, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
             onPointerUp={(e: any) => {
@@ -213,13 +208,32 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
               e.target.setPointerCapture(e.pointerId);
               drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())));
             }}
+            onClick={(e: any) => {
+              if (e.delta <= 2) {
+                window.open('https://spectrumdynamics.in', '_blank');
+              }
+            }}
           >
             <mesh geometry={nodes.card.geometry}>
-              <meshBasicMaterial
-                map={cardTexture}
-                map-anisotropy={16}
-                toneMapped={false}
+              <meshPhysicalMaterial
+                color="#141414"
+                clearcoat={1}
+                clearcoatRoughness={0.2}
+                roughness={0.6}
+                metalness={0.3}
               />
+              <Html
+                transform
+                position={[0, 0, 0.015]}
+                scale={0.1}
+                style={{ pointerEvents: 'none' }}
+              >
+                <img 
+                  src="/logo.svg" 
+                  alt="Spectrum Dynamics" 
+                  style={{ width: '120px', filter: 'invert(1)', opacity: 0.9 }} 
+                />
+              </Html>
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
