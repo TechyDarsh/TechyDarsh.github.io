@@ -50,23 +50,24 @@ export default function Hero() {
 
         {/* SOFTWARE */}
         <motion.h1
-          style={{ y: softwareY }}
+          style={{ 
+            y: softwareY,
+            fontSize: "clamp(90px, 14vw, 220px)"
+          }}
           className="font-black text-[#111] leading-[0.82] tracking-[-0.05em]"
         >
-          <span style={{ fontSize: "clamp(90px, 14vw, 220px)" }}>
-            Software
-          </span>
+          Software
         </motion.h1>
 
         {/* ENGINEER */}
         <motion.h2
-          style={{ y: engineerY }}
-          className="font-black text-transparent leading-[0.82] tracking-[-0.05em]"
-          style={{
+          style={{ 
+            y: engineerY,
             WebkitTextStroke: "3px #111",
             fontSize: "clamp(90px, 14vw, 220px)",
             marginTop: "-0.1em",
           }}
+          className="font-black text-transparent leading-[0.82] tracking-[-0.05em]"
         >
           Engineer
         </motion.h2>
