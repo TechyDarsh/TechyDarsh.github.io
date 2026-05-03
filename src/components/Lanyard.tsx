@@ -3,15 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer, Html } from '@react-three/drei';
-import {
-  BallCollider,
-  CuboidCollider,
-  Physics,
-  RigidBody,
-  useRopeJoint,
-  useSphericalJoint,
-  RigidBodyProps
-} from '@react-three/rapier';
+import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint, RigidBodyProps } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
 
@@ -24,30 +16,30 @@ interface LanyardProps {
   transparent?: boolean;
 }
 
-export default function Lanyard({
-  position = [0, 0, 30],
-  gravity = [0, -40, 0],
-  fov = 20,
-  transparent = true
+export default function Lanyard({ 
+  position = [0, 0, 30], 
+  gravity = [0, -40, 0], 
+  fov = 20, 
+  transparent = true 
 }: LanyardProps) {
-  const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
   useEffect(() => {
-    const handleResize = (): void => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
-    <div className="relative z-0 w-full h-[500px] md:h-[600px] flex justify-center items-center transform scale-100 origin-center">
+    <div className="relative z-0 w-full h-full flex justify-center items-center">
       <Canvas
-        camera={{ position, fov }}
+        camera={{ position: position, fov: fov }}
         dpr={[1, isMobile ? 1.5 : 2]}
         gl={{ alpha: transparent }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
-        <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
+        <Physics gravity={gravity as any} timeStep={isMobile ? 1 / 30 : 1 / 60}>
           <Band isMobile={isMobile} />
         </Physics>
         <Environment blur={0.75}>
@@ -85,37 +77,20 @@ export default function Lanyard({
   );
 }
 
-interface BandProps {
-  maxSpeed?: number;
-  minSpeed?: number;
-  isMobile?: boolean;
-}
-
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
-  // Using "any" for refs since the exact types depend on Rapier's internals
-  const band = useRef<any>(null);
-  const fixed = useRef<any>(null);
-  const j1 = useRef<any>(null);
-  const j2 = useRef<any>(null);
-  const j3 = useRef<any>(null);
-  const card = useRef<any>(null);
-
-  const vec = new THREE.Vector3();
-  const ang = new THREE.Vector3();
-  const rot = new THREE.Vector3();
-  const dir = new THREE.Vector3();
-
-  const segmentProps: any = {
-    type: 'dynamic' as RigidBodyProps['type'],
-    canSleep: true,
-    colliders: false,
-    angularDamping: 4,
-    linearDamping: 4
-  };
-
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
+  const band = useRef<any>(),
+    fixed = useRef<any>(),
+    j1 = useRef<any>(),
+    j2 = useRef<any>(),
+    j3 = useRef<any>(),
+    card = useRef<any>();
+  const vec = new THREE.Vector3(),
+    ang = new THREE.Vector3(),
+    rot = new THREE.Vector3(),
+    dir = new THREE.Vector3();
+  const segmentProps = { type: 'dynamic' as const, canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
   const { nodes, materials } = useGLTF('/card.glb') as any;
   const texture = useTexture('/lanyard.png');
-  // Removed cardTexture logic
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
@@ -128,29 +103,23 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
-    [0, 1.45, 0]
+    [0, 1.5, 0]
   ]);
 
   useEffect(() => {
     if (hovered) {
       document.body.style.cursor = dragged ? 'grabbing' : 'grab';
-      return () => {
-        document.body.style.cursor = 'auto';
-      };
+      return () => void (document.body.style.cursor = 'auto');
     }
   }, [hovered, dragged]);
 
   useFrame((state, delta) => {
-    if (dragged && typeof dragged !== 'boolean') {
+    if (dragged) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
       vec.add(dir.multiplyScalar(state.camera.position.length()));
       [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
-      card.current?.setNextKinematicTranslation({
-        x: vec.x - dragged.x,
-        y: vec.y - dragged.y,
-        z: vec.z - dragged.z
-      });
+      card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
     }
     if (fixed.current) {
       [j1, j2].forEach(ref => {
@@ -178,72 +147,140 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
   return (
     <>
       <group position={[0, 4, 0]}>
-        <RigidBody ref={fixed} {...segmentProps} type={'fixed' as RigidBodyProps['type']} />
-        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} type={'dynamic' as RigidBodyProps['type']}>
+        <RigidBody ref={fixed} {...segmentProps} type="fixed" />
+        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps} type={'dynamic' as RigidBodyProps['type']}>
+        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps} type={'dynamic' as RigidBodyProps['type']}>
+        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody
-          position={[2, 0, 0]}
-          ref={card}
-          {...segmentProps}
-          type={dragged ? ('kinematicPosition' as RigidBodyProps['type']) : ('dynamic' as RigidBodyProps['type'])}
-        >
-          <CuboidCollider args={[0.92, 1.3, 0.01]} />
+        <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
+          <CuboidCollider args={[0.8, 1.125, 0.01]} />
           <group
-            scale={2.35}
-            position={[0, -1.25, -0.05]}
+            scale={2.25}
+            position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={(e: any) => {
-              e.target.releasePointerCapture(e.pointerId);
-              drag(false);
-            }}
-            onPointerDown={(e: any) => {
-              e.target.setPointerCapture(e.pointerId);
-              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())));
-            }}
-            onClick={(e: any) => {
-              if (e.delta <= 2) {
-                window.open('https://spectrumdynamics.in', '_blank');
-              }
-            }}
+            onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
+            onPointerDown={e => (
+              e.target.setPointerCapture(e.pointerId),
+              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
+            )}
           >
+            {/* Invisible collision mesh — keeps the GLB shape for physics */}
             <mesh geometry={nodes.card.geometry}>
-              <meshPhysicalMaterial
-                color="#141414"
-                clearcoat={1}
-                clearcoatRoughness={0.2}
-                roughness={0.6}
-                metalness={0.3}
-              />
-              <Html
-                transform
-                position={[0, 0, 0.015]}
-                scale={0.1}
-                style={{ pointerEvents: 'none' }}
-              >
-                <img 
-                  src="/logo.svg" 
-                  alt="Spectrum Dynamics" 
-                  style={{ width: '120px', filter: 'invert(1)', opacity: 0.9 }} 
-                />
-              </Html>
+              <meshBasicMaterial transparent opacity={0} />
             </mesh>
+
+            {/* Portrait card — the only visible card face */}
+            <Html transform position={[0, 1.18, 0.04]} scale={0.115} style={{ pointerEvents: 'none' }}>
+              <div
+                style={{
+                  width: '320px',
+                  height: '420px',
+                  borderRadius: '22px',
+                  background: 'linear-gradient(145deg, #0a0a0a, #1a1a1a)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  padding: '30px 20px',
+                  boxShadow: '0 30px 100px rgba(0,0,0,0.8)',
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Shine overlay */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%)',
+                  pointerEvents: 'none'
+                }} />
+
+                {/* IMAGE */}
+                <div
+                  style={{
+                    width: '150px',
+                    height: '150px',
+                    borderRadius: '50%',
+                    padding: '3px',
+                    background: 'linear-gradient(135deg,#A036D9,#6C2BD9)',
+                    marginBottom: '20px',
+                    boxShadow: '0 10px 30px rgba(160, 54, 217, 0.3)',
+                    position: 'relative',
+                    zIndex: 1
+                  }}
+                >
+                  <img
+                    src="/darsh.png"
+                    alt="Darsh"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </div>
+
+                {/* NAME */}
+                <h2 style={{ color: 'white', fontSize: '26px', margin: 0, fontWeight: 'bold', position: 'relative', zIndex: 1 }}>
+                  DARSH C S
+                </h2>
+
+                {/* ROLE */}
+                <p
+                  style={{
+                    color: '#A036D9',
+                    fontSize: '13px',
+                    letterSpacing: '3px',
+                    marginTop: '6px',
+                    fontWeight: 'bold',
+                    position: 'relative',
+                    zIndex: 1
+                  }}
+                >
+                  SOFTWARE ENGINEER
+                </p>
+
+                {/* DIVIDER */}
+                <div
+                  style={{
+                    width: '60%',
+                    height: '1px',
+                    background: 'rgba(255,255,255,0.1)',
+                    margin: '20px 0',
+                    position: 'relative',
+                    zIndex: 1
+                  }}
+                />
+
+                {/* BRAND */}
+                <p
+                  style={{
+                    color: 'rgba(255,255,255,0.6)',
+                    fontSize: '12px',
+                    letterSpacing: '2px',
+                    fontWeight: '500',
+                    position: 'relative',
+                    zIndex: 1
+                  }}
+                >
+                  SPECTRUM DYNAMICS
+                </p>
+              </div>
+            </Html>
+
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
           </group>
         </RigidBody>
       </group>
       <mesh ref={band}>
-        {/* @ts-expect-error - meshline types not available in JSX */}
         <meshLineGeometry />
-        {/* @ts-expect-error - meshline types not available in JSX */}
         <meshLineMaterial
           color="white"
           depthTest={false}

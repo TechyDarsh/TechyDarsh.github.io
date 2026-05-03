@@ -51,7 +51,7 @@ export default function Skills() {
   );
 
   return (
-    <section id="skills" className="pb-28 md:pb-40 overflow-hidden" style={{ background: "transparent" }}>
+    <section id="skills" className="pb-28 md:pb-40 overflow-hidden relative" style={{ background: "transparent" }}>
 
 
       <div ref={ref} className="max-w-7xl mx-auto px-6 md:px-10 lg:px-14 pt-0 mb-14">

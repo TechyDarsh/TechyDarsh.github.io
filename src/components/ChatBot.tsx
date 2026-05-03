@@ -155,9 +155,20 @@ export default function ChatBot() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
+  const [buttonVisible, setButtonVisible] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   let idCounter = useRef(0);
+
+  // Show button only when cursor is near the far right edge
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const fromRight = window.innerWidth - e.clientX;
+      setButtonVisible(fromRight < 120);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -218,19 +229,20 @@ export default function ChatBot() {
 
   return (
     <>
-      {/* ── Floating trigger button ── */}
+      {/* ── Floating trigger button — appears only near right edge ── */}
       <AnimatePresence>
         {!open && (
           <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            initial={{ x: 80, opacity: 0 }}
+            animate={{ x: buttonVisible ? 0 : 80, opacity: buttonVisible ? 1 : 0 }}
+            exit={{ x: 80, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 28 }}
             onClick={handleOpen}
             className="hidden md:flex fixed md:bottom-6 md:right-6 z-[9998] w-14 h-14 rounded-full items-center justify-center cursor-pointer"
             style={{
               background: "linear-gradient(135deg, #7B2FBE 0%, #A036D9 100%)",
               boxShadow: "0 8px 32px rgba(160, 54, 217, 0.4), 0 0 0 1px rgba(255,255,255,0.06)",
+              pointerEvents: buttonVisible ? 'auto' : 'none',
             }}
             whileHover={{ scale: 1.1, boxShadow: "0 12px 40px rgba(160, 54, 217, 0.55)" }}
             whileTap={{ scale: 0.95 }}

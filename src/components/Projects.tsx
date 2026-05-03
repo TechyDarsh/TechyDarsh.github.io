@@ -186,7 +186,7 @@ export default function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="pt-28 md:pt-40 pb-0"
+      className="relative pt-28 md:pt-40 pb-0"
       style={{ background: "transparent" }}
     >
       <div className="rule" />
@@ -348,7 +348,7 @@ export default function Projects() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 md:pr-8 pointer-events-none flex flex-col items-center md:items-start text-center md:text-left"
+            className="flex-1 md:pr-8 pointer-events-none flex flex-col items-center text-center"
           >
             <p
               className="font-bold tracking-[-0.04em] leading-[1.15]"
@@ -378,7 +378,7 @@ export default function Projects() {
                 <span style={{ color: "rgba(255,255,255,0.12)" }}>&rdquo;</span>
               </span>
             </p>
-            <div className="flex items-center justify-center md:justify-start gap-4 mt-8">
+            <div className="flex items-center justify-center gap-4 mt-8">
               <div style={{ width: 32, height: 1, background: "rgba(255,255,255,0.12)" }} />
               <span className="text-[12px] font-mono tracking-[0.18em] uppercase" style={{ color: "#444" }}>
                 A philosophy, not an excuse
@@ -391,7 +391,7 @@ export default function Projects() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-8 md:mt-10 w-full flex justify-center md:justify-start"
+              className="mt-8 md:mt-10 w-full flex justify-center"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

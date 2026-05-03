@@ -40,9 +40,15 @@ function useMagnetic(strength = 0.35) {
 }
 
 /* ─── Animated nav link ─── */
-function NavLink({ label, href }: { label: string; href: string }) {
+function NavLink({ label, href, dark = false }: { label: string; href: string; dark?: boolean }) {
   const [hovered, setHovered] = useState(false);
   const { ref: magRef, sx: magSx, sy: magSy, onMove: magOnMove, onLeave: magOnLeave } = useMagnetic(0.25);
+
+  const activeColor = dark ? "#111" : "#fff";
+  const idleColor = dark ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.38)";
+  const underlineColor = dark
+    ? "linear-gradient(90deg, transparent, rgba(0,0,0,0.5), transparent)"
+    : "linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)";
 
   return (
     <motion.a
@@ -53,7 +59,7 @@ function NavLink({ label, href }: { label: string; href: string }) {
       onMouseEnter={() => setHovered(true)}
       className="relative px-1 py-0.5 text-[13px] font-medium tracking-[-0.01em] select-none"
       style={{
-        color: hovered ? "#fff" : "rgba(255,255,255,0.38)",
+        color: hovered ? activeColor : idleColor,
         transition: "color 0.3s ease",
         x: magSx,
         y: magSy,
@@ -63,7 +69,7 @@ function NavLink({ label, href }: { label: string; href: string }) {
       <motion.span
         layoutId="nav-underline"
         className="absolute -bottom-0.5 left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)" }}
+        style={{ background: underlineColor }}
         initial={false}
         animate={{ scaleX: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
@@ -190,17 +196,18 @@ export default function Navbar() {
                 gap: "2px",
                 padding: "6px 8px",
                 borderRadius: "100px",
-                background: "rgba(255,255,255,0.03)",
-                border: "0.5px solid rgba(255,255,255,0.06)",
+                background: scrolled ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.04)",
+                border: scrolled ? "0.5px solid rgba(255,255,255,0.06)" : "0.5px solid rgba(0,0,0,0.08)",
                 position: "absolute",
                 left: "50%",
                 transform: "translateX(-50%)",
+                transition: "background 0.5s ease, border 0.5s ease",
               }}
               className="md-flex"
             >
               {links.map((l) => (
                 <div key={l.label} style={{ position: "relative" }}>
-                  <NavLink label={l.label} href={l.href} />
+                  <NavLink label={l.label} href={l.href} dark={!scrolled} />
                 </div>
               ))}
             </nav>
@@ -220,14 +227,15 @@ export default function Navbar() {
                 fontSize: "12px",
                 fontWeight: 500,
                 letterSpacing: "-0.01em",
-                color: "rgba(255,255,255,0.75)",
+                color: scrolled ? "rgba(255,255,255,0.75)" : "rgba(0,0,0,0.6)",
                 textDecoration: "none",
-                border: "0.5px solid rgba(255,255,255,0.1)",
-                background: "rgba(255,255,255,0.04)",
+                border: scrolled ? "0.5px solid rgba(255,255,255,0.1)" : "0.5px solid rgba(0,0,0,0.15)",
+                background: scrolled ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)",
                 flexShrink: 0,
                 fontFamily: "inherit",
                 position: "relative",
                 overflow: "hidden",
+                transition: "background 0.5s ease, border 0.5s ease, color 0.5s ease",
               }}
               className="md-flex hire-btn"
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
