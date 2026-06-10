@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tamil Song Lyrics</title>
+  <style>
+    :root {
+      --bg: #0e0e0e;
+      --card: #161616;
+      --border: #2a2a2a;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim: rgba(201,168,76,0.12);
+      --text: #e8e0d0;
+      --muted: #7a7060;
+      --badge-bg: #1e1b14;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #0e0e0e 0%, #1a1508 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 18px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .logo-wrap h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--gold-light);
+    }
+    .logo-wrap p {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .count-badge {
+      background: var(--badge-bg);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ── Search ── */
+    .search-wrap {
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 9px 14px 9px 38px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--gold); }
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    /* ── Song list ── */
+    main { padding: 16px 14px 0; }
+
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      padding-left: 2px;
+    }
+
+    .song-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .song-item-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .song-actions {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: none;
+      border-radius: 0 12px 12px 0;
+      z-index: 0;
+    }
+    .edit-btn {
+      background: none;
+      border: none;
+      color: var(--gold-light);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px;
+    }
+
+    .song-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      transition: border-color 0.2s, background 0.2s, transform 0.3s cubic-bezier(0.32,0.72,0,1);
+      position: relative;
+      z-index: 1;
+      touch-action: pan-y;
+    }
+    .song-card.swiping {
+      transition: none;
+    }
+    .song-card:hover { border-color: var(--gold); background: #1a1810; }
+
+    .song-num {
+      min-width: 26px;
+      height: 26px;
+      background: var(--gold-dim);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .song-info { flex: 1; min-width: 0; }
+    .song-info .name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .song-info .lang {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .view-btn {
+      flex-shrink: 0;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .view-btn:hover { background: var(--gold); color: #0e0e0e; }
+
+    .no-results {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 40px 0;
+      display: none;
+    }
+
+    /* ── FAB Add button ── */
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      background: var(--gold);
+      color: #0e0e0e;
+      border: none;
+      border-radius: 50%;
+      width: 54px;
+      height: 54px;
+      font-size: 26px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(201,168,76,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      transition: transform 0.15s;
+    }
+    .fab:hover { transform: scale(1.08); }
+    .fab:active { transform: scale(0.96); }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 300;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: #181510;
+      border: 1px solid var(--border);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      width: 100%;
+      padding: 24px 20px 36px;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .modal-header h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 7px;
+    }
+    .form-group input {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--gold); }
+    .form-group input::placeholder { color: var(--muted); }
+
+    .form-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .add-submit {
+      width: 100%;
+      background: var(--gold);
+      color: #0e0e0e;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 13px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: opacity 0.2s;
+    }
+    .add-submit:hover { opacity: 0.9; }
+
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e1e1e;
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 30px;
+      z-index: 400;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .error-msg {
+      color: #e06060;
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo-wrap">
+      <h1>♪ Tamil Songs</h1>
+      <p>Lyrics Collection</p>
+    </div>
+    <span class="count-badge" id="countBadge">25 Songs</span>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search songs…" autocomplete="off" />
+  </div>
+</header>
+
+<main>
+  <p class="section-label">All Songs</p>
+  <div class="song-list" id="songList"></div>
+  <p class="no-results" id="noResults">No songs match your search.</p>
+</main>
+
+<!-- FAB -->
+<button class="fab" id="fabBtn" title="Add Song">＋</button>
+
+<!-- Add Song Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Add New Song</h2>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Song Name</label>
+      <input type="text" id="newSongName" placeholder="e.g. Vennilave Vennilave" />
+      <p class="error-msg" id="nameError">Please enter a song name.</p>
+    </div>
+    <div class="form-group">
+      <label>Lyrics Page URL</label>
+      <input type="url" id="newSongUrl" placeholder="https://www.tamil2lyrics.com/lyrics/…" />
+      <p class="form-hint">Paste the full URL to the lyrics page.</p>
+      <p class="error-msg" id="urlError">Please enter a valid URL (starting with https://).</p>
+    </div>
+    <div class="form-group">
+      <label>Language <span style="color:var(--muted);text-transform:none;font-size:10px;">(optional)</span></label>
+      <input type="text" id="newSongLang" placeholder="Tamil / Telugu / etc." />
+    </div>
+    <button class="add-submit" id="addSubmit">Add Song</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Song added!</div>
+
+<script>
+  const DEFAULT_SONGS = [
+    { name: "Amma Endru Alaikatha",    url: "https://www.tamil2lyrics.com/lyrics/amma-endrazhaikatha-song-lyrics/",            lang: "Tamil" },
+    { name: "Peru Vechalum",           url: "https://www.tamil2lyrics.com/lyrics/per-vachaalum-vaikkaama-song-lyrics/",         lang: "Tamil" },
+    { name: "Chinna Chinna Vanna Kuyil", url: "https://www.tamil2lyrics.com/lyrics/chinna-chinna-vanna-kuyil-song-lyrics/",    lang: "Tamil" },
+    { name: "Kodiyile Malliga",        url: "https://www.tamil2lyrics.com/lyrics/kodiyile-malligai-poo-song-lyrics/",           lang: "Tamil" },
+    { name: "Potthivacha Malliga",     url: "https://tamillyrics143.com/poththi-vachcha-malligai-mottu-song-lyrics/",           lang: "Tamil" },
+    { name: "Paartha Mudhal Naal",     url: "https://tamillyrics143.com/paartha-mudhal-naale-song-lyrics/",                     lang: "Tamil" },
+    { name: "Kokkara Kokkara Ko",      url: "https://www.tamil2lyrics.com/lyrics/kokkarakko-song-lyrics/",                      lang: "Tamil" },
+    { name: "Megham Karukkatha",       url: "https://www.tamil2lyrics.com/lyrics/megham-karukkatha-song-lyrics/",               lang: "Tamil" },
+    { name: "Raja Raja Chozhan",       url: "https://www.tamil2lyrics.com/lyrics/raja-raja-chozhan-song-lyrics/",               lang: "Tamil" },
+    { name: "Maanguyile Poon",         url: "https://www.tamil2lyrics.com/lyrics/manguyile-poonguyile-song-lyrics/",            lang: "Tamil" },
+    { name: "Mustafa Mustafa",         url: "https://www.tamil2lyrics.com/lyrics/mustafa-mustafa-song-lyrics/",                 lang: "Tamil" },
+    { name: "Vaseegara",               url: "https://www.tamil2lyrics.com/lyrics/vaseegaraa-en-nenjinikka-song-lyrics/",        lang: "Tamil" },
+    { name: "Thenmozhi",               url: "https://www.tamil2lyrics.com/lyrics/thenmozhi-song-lyrics/",                       lang: "Tamil" },
+    { name: "Vaa Vaathi",              url: "https://www.tamil2lyrics.com/lyrics/vaa-vaathi-song-lyrics/",                      lang: "Tamil" },
+    { name: "Minnale (Amaran)",        url: "https://www.tamil2lyrics.com/lyrics/hey-minnale-song-lyrics/",                     lang: "Tamil" },
+    { name: "Andangkaka Kondai",       url: "https://www.tamil2lyrics.com/lyrics/andangkaka-song-lyrics/",                      lang: "Tamil" },
+    { name: "Poongatru Thirumbuma",    url: "https://www.tamil2lyrics.com/lyrics/poongatru-thirumbuma-song-lyrics/",             lang: "Tamil" },
+    { name: "Chinna Vanna Kuyil",      url: "https://www.tamil2lyrics.com/lyrics/chinna-chinna-vanna-kuyil-song-lyrics/",       lang: "Tamil" },
+    { name: "Mayanginen Solla",        url: "https://www.tamil2lyrics.com/lyrics/mayanginen-solla-thayanginen-song-lyrics/",     lang: "Tamil" },
+    { name: "Rajavin Paarvai",         url: "https://www.tamil2lyrics.com/lyrics/rajavin-paarvai-song-lyrics/",                  lang: "Tamil" },
+    { name: "Kuzhal Oodhum",           url: "https://www.tamil2lyrics.com/lyrics/kuzhaloothum-kannanukku-song-lyrics/",          lang: "Tamil" },
+    { name: "Kannana Kanne",           url: "https://www.tamil2lyrics.com/lyrics/kannaana-kanney-song-lyrics/",                  lang: "Tamil" },
+    { name: "Adho Andha Paravai",      url: "https://www.tamil2lyrics.com/lyrics/adho-anda-paravai-song-lyrics/",                lang: "Tamil" },
+    { name: "Oru Paadhi Kadhavu",      url: "https://www.tamil2lyrics.com/lyrics/oru-paadhi-kadhavu-song-lyrics/",               lang: "Tamil" },
+    { name: "Kani Penchina (Telugu)",  url: "https://www.telugulyricsguru.com/2020/07/kani-penchina-ma-ammake-song-lyrics-from-manam-movie-song-lyrics.html", lang: "Telugu" },
+  ];
+
+  const STORAGE_KEY = "songs_v2";
+
+  function loadSongs() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch(e) {}
+    return DEFAULT_SONGS.map((s, i) => ({ ...s, id: i }));
+  }
+
+  function saveSongs(songs) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(songs)); } catch(e) {}
+  }
+
+  let songs = loadSongs();
+  let nextId = songs.length ? Math.max(...songs.map(s => s.id ?? 0)) + 1 : 25;
+
+  const songList     = document.getElementById("songList");
+  const searchInput  = document.getElementById("searchInput");
+  const noResults    = document.getElementById("noResults");
+  const countBadge   = document.getElementById("countBadge");
+  const fabBtn       = document.getElementById("fabBtn");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const modalClose   = document.getElementById("modalClose");
+  const addSubmit    = document.getElementById("addSubmit");
+  const newSongName  = document.getElementById("newSongName");
+  const newSongUrl   = document.getElementById("newSongUrl");
+  const newSongLang  = document.getElementById("newSongLang");
+  const nameError    = document.getElementById("nameError");
+  const urlError     = document.getElementById("urlError");
+  const toast        = document.getElementById("toast");
+
+  function renderSongs(list) {
+    songList.innerHTML = "";
+    countBadge.textContent = songs.length + " Song" + (songs.length !== 1 ? "s" : "");
+    noResults.style.display = list.length === 0 ? "block" : "none";
+
+    list.forEach((song, idx) => {
+      const globalIdx = songs.indexOf(song);
+      const wrapper = document.createElement("div");
+      wrapper.className = "song-item-wrapper";
+      wrapper.dataset.id = song.id;
+
+      const langLabel = song.lang || "Tamil";
+
+      wrapper.innerHTML = `
+        <div class="song-actions">
+          <button class="edit-btn" onclick="editSong(${song.id})">✎ Edit</button>
+        </div>
+        <div class="song-card">
+          <div class="song-num">${globalIdx + 1}</div>
+          <div class="song-info">
+            <div class="name">${escHtml(song.name)}</div>
+            <div class="lang">${escHtml(langLabel)}</div>
+          </div>
+          <a class="view-btn" href="${escHtml(song.url)}" target="_blank" rel="noopener noreferrer">
+            ♪ Lyrics
+          </a>
+        </div>
+      `;
+      songList.appendChild(wrapper);
+    });
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function filterAndRender() {
+    const q = searchInput.value.trim().toLowerCase();
+    const filtered = q ? songs.filter(s => s.name.toLowerCase().includes(q)) : songs;
+    renderSongs(filtered);
+  }
+
+  searchInput.addEventListener("input", filterAndRender);
+
+  // Swipe-to-edit touch logic
+  let startX = 0, currentX = 0;
+  let activeCard = null;
+
+  songList.addEventListener('touchstart', e => {
+    const card = e.target.closest('.song-card');
+    if (!card) return;
+    
+    // Close others
+    document.querySelectorAll('.song-card').forEach(c => {
+      if (c !== card) c.style.transform = 'translateX(0)';
+    });
+    
+    activeCard = card;
+    startX = e.touches[0].clientX;
+    card.classList.add('swiping');
+  }, { passive: true });
+
+  songList.addEventListener('touchmove', e => {
+    if (!activeCard) return;
+    currentX = e.touches[0].clientX;
+    const diff = currentX - startX;
+    if (diff < 0) { // Swiping left
+      activeCard.style.transform = `translateX(${Math.max(diff, -80)}px)`;
+    } else { // Swiping right
+      activeCard.style.transform = `translateX(${Math.min(diff, 0)}px)`;
+    }
+  }, { passive: true });
+
+  songList.addEventListener('touchend', e => {
+    if (!activeCard) return;
+    activeCard.classList.remove('swiping');
+    const diff = currentX - startX;
+    if (diff < -40) {
+      activeCard.style.transform = 'translateX(-70px)';
+    } else {
+      activeCard.style.transform = 'translateX(0)';
+    }
+    activeCard = null;
+  });
+
+  // Close swipe on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.song-item-wrapper')) {
+      document.querySelectorAll('.song-card').forEach(c => c.style.transform = 'translateX(0)');
+    }
+  });
+
+  let editingId = null;
+  window.editSong = function(id) {
+    const song = songs.find(s => s.id === id);
+    if (!song) return;
+    editingId = id;
+    newSongName.value = song.name;
+    newSongUrl.value = song.url;
+    newSongLang.value = song.lang || "Tamil";
+    
+    document.querySelector('.modal-header h2').textContent = "Edit Song";
+    addSubmit.textContent = "Save Changes";
+    
+    openModal();
+    // Reset swiped cards
+    document.querySelectorAll('.song-card').forEach(c => c.style.transform = 'translateX(0)');
+  };
+
+  // Modal
+  function openModal() {
+    nameError.style.display = "none";
+    urlError.style.display = "none";
+    modalOverlay.classList.add("open");
+    setTimeout(() => newSongName.focus(), 320);
+  }
+  function closeModal() { modalOverlay.classList.remove("open"); }
+
+  fabBtn.addEventListener("click", () => {
+    editingId = null;
+    document.querySelector('.modal-header h2').textContent = "Add New Song";
+    addSubmit.textContent = "Add Song";
+    newSongName.value = "";
+    newSongUrl.value = "";
+    newSongLang.value = "";
+    openModal();
+  });
+  modalClose.addEventListener("click", closeModal);
+  modalOverlay.addEventListener("click", e => { if (e.target === modalOverlay) closeModal(); });
+
+  addSubmit.addEventListener("click", () => {
+    const name = newSongName.value.trim();
+    const url  = newSongUrl.value.trim();
+    const lang = newSongLang.value.trim() || "Tamil";
+
+    let valid = true;
+
+    if (!name) {
+      nameError.style.display = "block"; valid = false;
+    } else { nameError.style.display = "none"; }
+
+    if (!url || !url.startsWith("http")) {
+      urlError.style.display = "block"; valid = false;
+    } else { urlError.style.display = "none"; }
+
+    if (!valid) return;
+
+    if (editingId !== null) {
+      const idx = songs.findIndex(s => s.id === editingId);
+      if (idx !== -1) songs[idx] = { ...songs[idx], name, url, lang };
+      showToast('✓ "' + name + '" updated!');
+      editingId = null;
+    } else {
+      songs.push({ id: nextId++, name, url, lang });
+      showToast('✓ "' + name + '" added!');
+    }
+    
+    saveSongs(songs);
+    filterAndRender();
+    closeModal();
+  });
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2500);
+  }
+
+  // Initial render
+  renderSongs(songs);
+</script>
+</body>
+</html>
